@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: #151515;
+}
+
+.demo {
+  // filter: contrast(100);
+  // mix-blend-mode: screen;
+}
+
+#c {
+  mix-blend-mode: overlay;
+}
+    </style>
+    <script src="jquery-3.1.0.js"></script>
+    <script>
+        $(function(){
+            let canvas = document.getElementById('c'),
+    m_canvas = document.createElement('canvas');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+m_canvas.width = window.innerWidth;
+m_canvas.height = window.innerHeight;
+
+let ctx = canvas.getContext('2d'),
+    m_ctx = m_canvas.getContext('2d');
+
+// let colors = ["#866FED", "#72B6EC", "#ED7A6F", "#86C49A", "#F1B8CB"];
+// let colorIndex = Math.floor(Math.random() * colors.length);
+// document.documentElement.style.backgroundColor = colors[colorIndex];
+
+let circles = [],
+    noOfCircles = 100;
+
+for(let i = 0; i < noOfCircles; i++) {
+  let circle = {
+    x: Math.random() * canvas.offsetWidth,
+    y: Math.random() * canvas.offsetHeight,
+    radius: (Math.random() * 1) + 1,
+    speed: Math.random() * 20
+  };
+  
+  circles.push(circle);
+}
+
+function renderBubs() {
+  m_ctx.clearRect(0,0,canvas.offsetWidth, canvas.offsetHeight);
+  // m_ctx.fillStyle = colorIndex > 1 ? colors[colorIndex - 1] : colors[colorIndex + 1];
+  m_ctx.fillStyle = 'white';
+  m_ctx.beginPath();
+  
+  for(let i = 0; i < circles.length; i++) {
+    let circ = circles[i];
+    m_ctx.arc(circ.x, circ.y, circ.radius, 0, Math.PI*2, true);
+    circ.x += Math.random() * circ.speed;
+    circ.y += Math.random() * circ.speed;
+    
+    if(circ.x - (circ.radius*2) > canvas.offsetWidth) circ.x = 0 - (circ.radius*2);
+    if(circ.y - (circ.radius*2) > canvas.offsetHeight) circ.y = 0 - (circ.radius*2);
+    
+    if(i+1 != circles.length) m_ctx.moveTo(circles[i+1].x, circles[i+1].y);
+  }
+  m_ctx.fill();
+  requestAnimationFrame(renderBubs);
+}
+
+function render() {
+  ctx.clearRect(0,0,canvas.offsetWidth, canvas.offsetHeight);
+  ctx.drawImage(m_canvas, 0, 0);
+  requestAnimationFrame(render);
+}
+
+renderBubs();
+render();
+        })
+    </script>
+</head>
+<body>
+    <div class="demo">
+  <canvas id="c"  />
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+	background: #263238;
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+canvas {
+	background-image: url(http://ppcorn.com/us/wp-content/uploads/sites/14/2015/12/panic-at-the-disco-PPcorn-art.jpg);
+	background-position: center;
+	background-size: cover;
+}
+
+input {
+	margin: 1rem 0 0 0;
+	padding: 0 1rem;
+	line-height: 3rem;
+	width: 600px;
+	box-sizing: border-box;
+	border: 0;
+	background: none;
+	border-bottom: 2px solid rgba(255,255,255,0.4);
+	outline: none;
+	transition: all 0.2s ease;
+	color: white;
+}
+
+input:focus {
+	border-bottom: 2px solid rgba(255,255,255,0.8);
+}
+    </style>
+    <script src="jquery-3.1.0.js"></script>
+    <script>
+        $(function(){
+            var canvas = $("canvas")[0];
+
+var ctx = canvas.getContext("2d");
+
+function doStuff() {
+	ctx.clearRect(0,0,800,600);
+	for(var i = 0; i < 600; i += 100) {
+		for(var j = 0; j < 800; j += 100) {
+			var opacity = Math.abs((600 - i - j) / 400);
+			var h = 360 * ((i + j)/700 * Math.random());
+			var s = 60 + (Math.random() * 20);
+			var l = 50 + (Math.random() * 20);
+			ctx.fillStyle = "hsla(" + h + ", " + s + "%, " + l + "%, "+ opacity + ")";
+			console.log(h, s, l, opacity);
+			ctx.fillRect(j, i, 100, 100);
+		}
+	}
+}
+
+doStuff();
+
+$("input").on("change paste keyup", function() {
+	var url = $(this).val();
+	if(url) {
+		$("canvas").css("background-image", "url(" + url + ")");
+	} else {
+		$("canvas").css("background-image", "");
+	}
+	doStuff();
+})
+        })
+    </script>
+</head>
+<body>
+    <canvas width="800", height="600"></canvas>
+    <input type="text", id="img", placeholder="Image URL">
+</body>
+</html>
